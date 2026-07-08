@@ -1,1 +1,3 @@
-<Solution />
+<Solution>
+  <Project Path="brk.Framework.Utility/brk.Framework.Utility.csproj" />
+</Solution>
