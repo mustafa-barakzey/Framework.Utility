@@ -1,4 +1,5 @@
 <Solution>
+  <Folder Name="/.github/" />
   <Project Path="brk.Framework.Sample/brk.Framework.Sample.csproj" />
   <Project Path="brk.Framework.Utility/brk.Framework.Utility.csproj" />
 </Solution>
