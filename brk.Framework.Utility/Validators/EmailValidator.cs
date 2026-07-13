@@ -60,10 +60,10 @@ public class EmailValidator
     public class ValidationResult
     {
         public bool IsValid { get; set; }
-        public string Email { get; set; }
-        public string LocalPart { get; set; }
-        public string Domain { get; set; }
-        public string NormalizedEmail { get; set; }
+        public string Email { get; set; } = string.Empty;
+        public string LocalPart { get; set; } = string.Empty;
+        public string Domain { get; set; } = string.Empty;
+        public string NormalizedEmail { get; set; } = string.Empty;
         public List<string> Errors { get; set; } = new List<string>();
         public List<string> Warnings { get; set; } = new List<string>();
         public EmailValidationLevel ValidationLevel { get; set; }
@@ -340,7 +340,7 @@ public class EmailValidator
     /// <summary>
     /// Async validation with DNS and SMTP checks
     /// </summary>
-    public static async Task<ValidationResult> ValidateAsync(string email, ValidationOptions options = null)
+    public static async Task<ValidationResult> ValidateAsync(string email, ValidationOptions? options = null)
     {
         options = options ?? DefaultOptions;
         var result = new ValidationResult
