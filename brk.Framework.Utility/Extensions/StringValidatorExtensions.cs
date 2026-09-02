@@ -1,6 +1,3 @@
-using System.Text.RegularExpressions;
-using brk.Framework.Utility.Constants;
-
 namespace brk.Framework.Utility.Extensions;
 
 public static class StringValidatorExtensions
@@ -12,19 +9,16 @@ public static class StringValidatorExtensions
     /// </summary>
     /// <param name="input">The string to check.</param>
     /// <returns><c>true</c> if non-empty and every character is a digit.</returns>
-    public static bool IsNumeric(this string input)
+    public static bool IsNumeric(this string? input)
     {
         if (string.IsNullOrEmpty(input))
             return false;
-        try
-        {
 
-            return new Regex(RegexPatterns.NumericPattern, RegexOptions.Compiled, TimeSpan.FromSeconds(1)).IsMatch(input);
-        }
-        catch
-        {
-            return false;
-        }
+        foreach (var character in input)
+            if (character is < '0' or > '9')
+                return false;
+
+        return true;
     }
 
     /// <summary>
@@ -34,6 +28,8 @@ public static class StringValidatorExtensions
     public static bool IsLengthBetween(this string input, int minLength, int maxLength)
     {
         ArgumentNullException.ThrowIfNull(input);
+        if (minLength > maxLength)
+            throw new ArgumentOutOfRangeException(nameof(minLength), "Minimum length cannot exceed maximum length.");
         return input.Length >= minLength && input.Length <= maxLength;
     }
 

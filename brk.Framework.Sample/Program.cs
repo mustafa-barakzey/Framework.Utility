@@ -26,7 +26,7 @@ Console.WriteLine("\n=== Iran National IDs ===");
 TestNumber("0123456789", NationalIdValidator.IsIranNationalId);
 TestNumber("9876543210", NationalIdValidator.IsIranNationalId);
 TestNumber("1111111111", NationalIdValidator.IsIranNationalId); // Invalid
-TestNumber("1234444321", NationalIdValidator.IsIranNationalId); // Invalid
+TestNumber("1234444321", NationalIdValidator.IsIranNationalId); // Valid checksum
 
 // Test Afghanistan National IDs
 Console.WriteLine("\n=== Afghanistan National IDs ===");
