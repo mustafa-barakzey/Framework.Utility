@@ -6,7 +6,7 @@ using brk.Framework.Utility.Extensions;
 namespace brk.Framework.Utility.Validators;
 
 /// <summary>
-/// Validates mobile, static phone numbers and national identity numbers for Iran and Afghanistan
+/// Provides validation and formatting methods for Iranian and Afghan mobile and landline phone numbers.
 /// </summary>
 public class MobileValidator
 {
@@ -85,7 +85,7 @@ public class MobileValidator
     #region Public Validation Methods
 
     /// <summary>
-    /// Validates Iranian mobile phone number
+    /// Determines whether the specified value is a valid Iranian mobile phone number.
     /// </summary>
     /// <param name="phoneNumber">Phone number to validate</param>
     /// <returns>True if valid Iranian mobile number</returns>
@@ -106,7 +106,7 @@ public class MobileValidator
     }
 
     /// <summary>
-    /// Validates Afghanistan mobile phone number
+    /// Determines whether the specified value is a valid Afghan mobile phone number.
     /// </summary>
     /// <param name="phoneNumber">Phone number to validate</param>
     /// <returns>True if valid Afghanistan mobile number</returns>
@@ -160,7 +160,7 @@ public class MobileValidator
     }
 
     /// <summary>
-    /// Validates Afghanistan static/landline phone number
+    /// Determines whether the specified value is a valid Afghan landline phone number.
     /// </summary>
     /// <param name="phoneNumber">Phone number to validate</param>
     /// <returns>True if valid Afghanistan static number</returns>
@@ -189,7 +189,7 @@ public class MobileValidator
     #region Combined Validation Methods
 
     /// <summary>
-    /// Validates any Iranian phone number (mobile or static)
+    /// Determines whether the specified value is a valid Iranian mobile or landline phone number.
     /// </summary>
     /// <param name="phoneNumber">Phone number to validate</param>
     /// <returns>True if valid Iranian phone number</returns>
@@ -199,7 +199,7 @@ public class MobileValidator
     }
 
     /// <summary>
-    /// Validates any Afghanistan phone number (mobile or static)
+    /// Determines whether the specified value is a valid Afghan mobile or landline phone number.
     /// </summary>
     /// <param name="phoneNumber">Phone number to validate</param>
     /// <returns>True if valid Afghanistan phone number</returns>
@@ -209,7 +209,7 @@ public class MobileValidator
     }
 
     /// <summary>
-    /// Validates phone number for either Iran or Afghanistan
+    /// Determines whether the specified value is a valid Iranian or Afghan phone number.
     /// </summary>
     /// <param name="phoneNumber">Phone number to validate</param>
     /// <param name="detectedCountry">Outputs the detected country (Iran/Afghanistan/Unknown)</param>
@@ -281,7 +281,7 @@ public class MobileValidator
     }
 
     /// <summary>
-    /// Formats Afghanistan mobile number to standard format: 070xxxxxxx
+    /// Formats a valid Afghan mobile number with the <c>+93</c> country code.
     /// </summary>
     /// <param name="mobile">Phone number to format</param>
     /// <returns>Formatted phone number</returns>
@@ -299,7 +299,7 @@ public class MobileValidator
     #region Helper Methods
 
     /// <summary>
-    /// Normalizes phone number by removing country code and non-digit characters
+    /// Normalizes a phone number by removing non-digit characters and its country code.
     /// </summary>
     /// <param name="phoneNumber">Phone number to normalize</param>
     /// <param name="countryCode">Country code to remove (e.g., "98" for Iran)</param>
@@ -329,7 +329,7 @@ public class MobileValidator
     }
 
     /// <summary>
-    /// Extracts the operator/provider name for Iranian mobile numbers
+    /// Gets the operator name associated with a valid Iranian mobile phone number.
     /// </summary>
     /// <param name="phoneNumber">Iranian mobile number</param>
     /// <returns>Operator name or "Unknown"</returns>

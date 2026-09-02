@@ -5,14 +5,14 @@ using System.Net.Sockets;
 namespace brk.Framework.Utility.Validators;
 
 /// <summary>
-/// Comprehensive email validation helper class with multiple validation strategies
+/// Provides configurable email address validation and normalization methods.
 /// </summary>
 public class EmailValidator
 {
     #region Configuration
 
     /// <summary>
-    /// Email validation options and settings
+    /// Defines options that control email address validation.
     /// </summary>
     public class ValidationOptions
     {
@@ -55,7 +55,7 @@ public class EmailValidator
     }
 
     /// <summary>
-    /// Validation result with detailed information
+    /// Represents the detailed result of an email address validation.
     /// </summary>
     public class ValidationResult
     {
@@ -151,7 +151,7 @@ public class EmailValidator
     #region Main Validation Methods
 
     /// <summary>
-    /// Validates an email address with default options
+    /// Validates an email address by using the default options and standard validation level.
     /// </summary>
     public static ValidationResult Validate(string email)
     {
@@ -159,7 +159,7 @@ public class EmailValidator
     }
 
     /// <summary>
-    /// Validates an email address with custom options
+    /// Validates an email address by using the specified options and standard validation level.
     /// </summary>
     public static ValidationResult Validate(string email, ValidationOptions options)
     {
@@ -167,7 +167,7 @@ public class EmailValidator
     }
 
     /// <summary>
-    /// Validates an email address with specified validation level
+    /// Validates an email address by using the specified validation level and default options.
     /// </summary>
     public static ValidationResult Validate(string email, EmailValidationLevel level)
     {
@@ -175,7 +175,7 @@ public class EmailValidator
     }
 
     /// <summary>
-    /// Comprehensive email validation with all options
+    /// Validates an email address by using the specified options and validation level.
     /// </summary>
     public static ValidationResult Validate(string email, ValidationOptions options, EmailValidationLevel level)
     {
@@ -329,7 +329,7 @@ public class EmailValidator
     }
 
     /// <summary>
-    /// Simple quick validation without detailed results
+    /// Determines whether an email address passes basic validation.
     /// </summary>
     public static bool IsValid(string email)
     {
@@ -338,7 +338,7 @@ public class EmailValidator
     }
 
     /// <summary>
-    /// Async validation with DNS and SMTP checks
+    /// Asynchronously validates an email address, including any configured DNS and SMTP checks.
     /// </summary>
     public static async Task<ValidationResult> ValidateAsync(string email, ValidationOptions? options = null)
     {
@@ -889,7 +889,7 @@ public class EmailValidator
     #region Utility Methods
 
     /// <summary>
-    /// Extracts domain from email address
+    /// Extracts the domain portion of an email address.
     /// </summary>
     public static string ExtractDomain(string email)
     {
@@ -905,7 +905,7 @@ public class EmailValidator
     }
 
     /// <summary>
-    /// Extracts local part from email address
+    /// Extracts the local portion of an email address.
     /// </summary>
     public static string ExtractLocalPart(string email)
     {
@@ -921,7 +921,7 @@ public class EmailValidator
     }
 
     /// <summary>
-    /// Checks if email is from a disposable domain
+    /// Determines whether an email address belongs to a disposable email domain.
     /// </summary>
     public static bool IsDisposableEmail(string email)
     {
@@ -937,7 +937,7 @@ public class EmailValidator
     }
 
     /// <summary>
-    /// Suggests corrections for common email typos
+    /// Suggests corrections for common email address typing errors.
     /// </summary>
     public static List<string> SuggestCorrections(string email)
     {
@@ -995,7 +995,7 @@ public class EmailValidator
     }
 
     /// <summary>
-    /// Normalizes email address (lowercase, trim, etc.)
+    /// Normalizes an email address by trimming whitespace and converting it to lowercase.
     /// </summary>
     public static string NormalizeEmailAddress(string email)
     {
@@ -1017,7 +1017,7 @@ public class EmailValidator
     }
 
     /// <summary>
-    /// Creates validation options with common presets
+    /// Provides commonly used email validation option presets.
     /// </summary>
     public static class Presets
     {

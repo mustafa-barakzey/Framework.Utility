@@ -24,7 +24,7 @@ public class NationalIdValidator
     }
 
     /// <summary>
-    /// Validates Iranian National ID (Code Melli) using the official algorithm
+    /// Determines whether the specified value is a valid Iranian national ID using the official checksum algorithm.
     /// </summary>
     /// <param name="nationalId">National ID to validate</param>
     /// <returns>True if valid Iranian National ID</returns>
@@ -37,6 +37,9 @@ public class NationalIdValidator
         return normalized.Length == 10 && IsIranNationalId(normalized);
     }
 
+    /// <summary>
+    /// Determines whether the specified value is a valid Iranian national ID.
+    /// </summary>
     public static bool IsIranNationalId(string nationalId)
     {
         if (string.IsNullOrWhiteSpace(nationalId) || !nationalId.IsLengthBetween(8, 10))
@@ -68,7 +71,7 @@ public class NationalIdValidator
 
 
     /// <summary>
-    /// Validates Afghanistan National ID (Tazkira)
+    /// Determines whether the specified value has a valid Afghan national ID (Tazkira) format.
     /// </summary>
     /// <param name="nationalId">National ID to validate</param>
     /// <returns>True if valid Afghanistan National ID</returns>

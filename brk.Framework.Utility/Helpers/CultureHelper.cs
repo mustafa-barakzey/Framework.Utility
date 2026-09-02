@@ -6,9 +6,9 @@ namespace brk.Framework.Utility.Helpers;
 public class CultureHelper
 {
     /// <summary>
-    /// Get persian culture info
+    /// Creates a <see cref="CultureInfo"/> configured for Iran with Persian calendar and number formatting.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A culture configured for Iranian Persian conventions.</returns>
     public static CultureInfo GetIranCulture()
     {
         var culture = new CultureInfo("fa-IR");
@@ -40,7 +40,7 @@ public class CultureHelper
     }
 
     /// <summary>
-    /// Get Afghan (Dari/Pashto) culture info
+    /// Creates a <see cref="CultureInfo"/> configured for Afghan Dari conventions.
     /// </summary>
     public static CultureInfo GetAfghanCulture()
     {
@@ -88,7 +88,7 @@ public class CultureHelper
     }
 
     /// <summary>
-    /// Get Pashto culture info
+    /// Creates a <see cref="CultureInfo"/> configured for Afghan Pashto conventions.
     /// </summary>
     public static CultureInfo GetPashtoCulture()
     {
