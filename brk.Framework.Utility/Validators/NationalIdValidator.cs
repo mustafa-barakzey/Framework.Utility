@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 using brk.Framework.Utility.Extensions;
 
 namespace brk.Framework.Utility.Validators;
@@ -9,19 +8,20 @@ public class NationalIdValidator
 
     // Iran National ID (Code Melli)
     // 10 digits, follows specific validation algorithm
-    private const string IranNationalIdPattern = @"^\d{10}$";
-
-    // Afghanistan National ID (Tazkira)
-    // Usually 10-13 digits
-    private const string AfghanistanNationalIdPattern = @"^\d{10,13}$";
-
     #endregion
 
     /// <summary>
     /// Determines whether every character in <paramref name="digits"/> is the same
     /// (e.g. "0000000000"), which is never a valid national code or national ID.
     /// </summary>
-    private static bool IsAllSameDigit(string digits) => digits.Distinct().Count() <= 1;
+    private static bool IsAllSameDigit(string digits)
+    {
+        for (var index = 1; index < digits.Length; index++)
+            if (digits[index] != digits[0])
+                return false;
+
+        return digits.Length > 0;
+    }
 
     /// <summary>
     /// Validates Iranian National ID (Code Melli) using the official algorithm
@@ -33,45 +33,8 @@ public class NationalIdValidator
         if (string.IsNullOrWhiteSpace(nationalId))
             return false;
 
-        // Remove any whitespace or special characters
-        nationalId = nationalId.Trim().Replace("-", "").Replace(" ", "");
-
-        // Check basic pattern
-        if (!Regex.IsMatch(nationalId, IranNationalIdPattern))
-            return false;
-
-        // Check for repetitive numbers (all same digits)
-        if (nationalId == new string(nationalId[0], 10))
-            return false;
-
-        try
-        {
-            // Algorithm: Iranian National ID validation
-            // Position: 10 9 8 7 6 5 4 3 2 1
-            // Multiply each digit (except the last) by its position
-            // Sum all products
-            // Calculate remainder of sum divided by 11
-            // If remainder < 2, the control digit should equal remainder
-            // If remainder >= 2, the control digit should equal 11 - remainder
-
-            int sum = 0;
-            for (int i = 0; i < 9; i++)
-            {
-                sum += int.Parse(nationalId[i].ToString()) * (10 - i);
-            }
-
-            int remainder = sum % 11;
-            int controlDigit = int.Parse(nationalId[9].ToString());
-
-            if (remainder < 2)
-                return controlDigit == remainder;
-            else
-                return controlDigit == (11 - remainder);
-        }
-        catch
-        {
-            return false;
-        }
+        var normalized = nationalId.Trim().Replace("-", string.Empty).Replace(" ", string.Empty);
+        return normalized.Length == 10 && IsIranNationalId(normalized);
     }
 
     public static bool IsIranNationalId(string nationalId)
@@ -79,7 +42,7 @@ public class NationalIdValidator
         if (string.IsNullOrWhiteSpace(nationalId) || !nationalId.IsLengthBetween(8, 10))
             return false;
 
-        nationalId = nationalId.PadLeft(10, '0');
+        nationalId = nationalId.ToEnglishNumber().PadLeft(10, '0');
 
         if (!nationalId.IsNumeric())
             return false;
@@ -91,14 +54,12 @@ public class NationalIdValidator
 
         static bool IsChecksumValid(string code)
         {
-            var digits = code.Select(c => c - '0').ToArray();
-
             var weightedSum = 0;
             for (int i = 0; i < 9; i++)
-                weightedSum += digits[i] * (10 - i);
+                weightedSum += (code[i] - '0') * (10 - i);
 
             var remainder = weightedSum % 11;
-            var checkDigit = digits[9];
+            var checkDigit = code[9] - '0';
 
             return (remainder < 2 && checkDigit == remainder)
                    || (remainder >= 2 && 11 - remainder == checkDigit);
@@ -116,19 +77,15 @@ public class NationalIdValidator
         if (string.IsNullOrWhiteSpace(nationalId))
             return false;
 
-        if (IsAllSameDigit(nationalId))
-            return false;
-
         // Remove any whitespace or special characters
-        nationalId = nationalId.Trim().Replace("-", "").Replace(" ", "");
+        nationalId = nationalId.Trim().Replace("-", "").Replace(" ", "").ToEnglishNumber();
 
         // Check basic pattern (10-13 digits)
-        if (!Regex.IsMatch(nationalId, AfghanistanNationalIdPattern))
+        if (nationalId.Length is < 10 or > 13 || !nationalId.IsNumeric())
             return false;
 
-        // Additional validation can be added here based on Tazkira format
-        // Currently checking if it's all digits and within length range
-        return long.TryParse(nationalId, out _);
+        // No public checksum specification is available for all Tazkira formats.
+        return !IsAllSameDigit(nationalId);
     }
 }
 // public class NationalIdValidator

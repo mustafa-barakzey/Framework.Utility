@@ -216,8 +216,6 @@ var description = MyEnum.Active.GetDescription();
 
 # Target Framework
 
-- .NET 8+
-- .NET 9+
 - .NET 10+
 
 ---

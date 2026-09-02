@@ -66,20 +66,12 @@ public static class DateTimeConverter
     /// </exception>
     public static DateTime ToGregorianDateTime(this string persianDateTime)
     {
-        persianDateTime = persianDateTime.Trim();
-
-        var dateAndTime = persianDateTime.Split(" ");
+        ArgumentException.ThrowIfNullOrWhiteSpace(persianDateTime);
+        var dateAndTime = persianDateTime.ToEnglishNumber().Trim().Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
 
         // date only
         if (dateAndTime.Length == 1)
         {
-            // Example format: "1402/01/01" or "1402-01-01"
-            var dateParts = dateAndTime[0].Split('/', '-');
-            if (dateParts.Length != 3)
-            {
-                throw new FormatException("Invalid Persian date format. Expected format: YYYY/MM/DD");
-            }
-
             var dateOnly = dateAndTime[0].ToGregorian();
             return new DateTime(dateOnly.Year, dateOnly.Month, dateOnly.Day);
         }
@@ -89,25 +81,9 @@ public static class DateTimeConverter
         {
             var dateOnly = dateAndTime[0].ToGregorian();
 
-            var time = dateAndTime[1].Split(":");
-
-            // HH:mm
-            if (time.Length == 2)
-            {
-                var hour = int.Parse(time[0]);
-                var minute = int.Parse(time[1]);
-
-                return new DateTime(dateOnly.Year, dateOnly.Month, dateOnly.Day, hour, minute, 0, 0);
-            }
-            // HH:mm:ss
-            if (time.Length == 3)
-            {
-                var hour = int.Parse(time[0]);
-                var minute = int.Parse(time[1]);
-                var second = int.Parse(time[2]);
-
-                return new DateTime(dateOnly.Year, dateOnly.Month, dateOnly.Day, hour, minute, second, 0);
-            }
+            if (TimeOnly.TryParseExact(dateAndTime[1], ["HH:mm", "HH:mm:ss"], CultureInfo.InvariantCulture,
+                    DateTimeStyles.None, out var time))
+                return dateOnly.ToDateTime(time);
         }
 
         throw new FormatException("Invalid Persian date format.");

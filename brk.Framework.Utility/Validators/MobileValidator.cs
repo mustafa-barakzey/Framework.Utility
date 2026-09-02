@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using System.Text;
 using brk.Framework.Utility.Constants;
 using brk.Framework.Utility.Extensions;
 
@@ -96,17 +97,12 @@ public class MobileValidator
         // Normalize the number
         string normalized = NormalizePhoneNumber(phoneNumber, "98");
 
-        // Check length after normalization
-        if (normalized.Length != 11 || !normalized.StartsWith("9"))
+        // National significant number: 9 followed by nine digits.
+        if (normalized.Length != 10 || !normalized.StartsWith('9'))
             return false;
 
         // Check if it matches mobile pattern
-        if (!Regex.IsMatch($"0{normalized}", RegexPatterns.IranMobilePattern))
-            return false;
-
-        // Check if prefix is valid
-        string prefix = $"0{normalized.Substring(0, 3)}";
-        return Array.Exists(IranMobilePrefixes, p => p.StartsWith(prefix));
+        return Array.Exists(IranMobilePrefixes, prefix => normalized.StartsWith(prefix.AsSpan(1), StringComparison.Ordinal));
     }
 
     /// <summary>
@@ -127,12 +123,7 @@ public class MobileValidator
             return false;
 
         // Check if it matches mobile pattern
-        if (!Regex.IsMatch($"0{normalized}", RegexPatterns.AfghanistanMobilePattern))
-            return false;
-
-        // Check if prefix is valid
-        string prefix = $"0{normalized.Substring(0, 3)}";
-        return Array.Exists(AfghanistanMobilePrefixes, p => p == prefix);
+        return Array.Exists(AfghanistanMobilePrefixes, prefix => normalized.StartsWith(prefix.AsSpan(1), StringComparison.Ordinal));
     }
 
 
@@ -283,20 +274,10 @@ public class MobileValidator
         if (!IsIranMobile(mobile))
             return mobile;
 
-        try
-        {
-            var nonDigitRegex = new Regex(RegexPatterns.NonDigitPattern, RegexOptions.Compiled, TimeSpan.FromSeconds(1));
-            mobile = nonDigitRegex.Replace(mobile, string.Empty).ToEnglishNumber();
-        }
-        catch
-        {
-            return string.Empty;
-        }
-        
         string normalized = NormalizePhoneNumber(mobile, "98");
         
         // $"0{normalized.Substring(0, 3)}-{normalized.Substring(3, 3)}-{normalized.Substring(6)}";
-        return normalized.Length < 10 ? string.Empty : $"+98{normalized.Substring(normalized.Length - 10, 10)}";
+        return $"+98{normalized}";
     }
 
     /// <summary>
@@ -309,19 +290,8 @@ public class MobileValidator
         if (!IsAfghanistanMobile(mobile))
             return mobile;
         
-        try
-        {
-            var nonDigitRegex = new Regex(RegexPatterns.NonDigitPattern, RegexOptions.Compiled, TimeSpan.FromSeconds(1));
-            mobile = nonDigitRegex.Replace(mobile, string.Empty).ToEnglishNumber();
-        }
-        catch
-        {
-            return string.Empty;
-        }
-
         string normalized = NormalizePhoneNumber(mobile, "93");
-        // return $"0{normalized.Substring(0, 2)}-{normalized.Substring(2, 3)}-{normalized.Substring(5)}";
-        return normalized.Length < 10 ? string.Empty : $"+93{normalized.Substring(normalized.Length - 10, 10)}";
+        return $"+93{normalized}";
     }
 
     #endregion
@@ -339,20 +309,23 @@ public class MobileValidator
         if (string.IsNullOrWhiteSpace(phoneNumber))
             return string.Empty;
 
-        // Remove all non-digit characters
-        string digits = Regex.Replace(phoneNumber, @"[^\d]", "");
+        var digits = new StringBuilder(phoneNumber.Length);
+        foreach (var character in phoneNumber.ToEnglishNumber())
+        {
+            if (character is >= '0' and <= '9')
+                digits.Append(character);
+        }
 
         // Remove country code if present
-        if (digits.StartsWith("00" + countryCode))
-            digits = digits.Substring((2 + countryCode.Length));
-        else if (digits.StartsWith("+" + countryCode))
-            digits = digits.Substring((1 + countryCode.Length));
-        else if (digits.StartsWith(countryCode) && digits.Length > 10)
-            digits = digits.Substring(countryCode.Length);
-        else if (digits.StartsWith("0"))
-            digits = digits.Substring(1);
+        var result = digits.ToString();
+        if (result.StartsWith("00" + countryCode, StringComparison.Ordinal))
+            result = result[(2 + countryCode.Length)..];
+        else if (result.StartsWith(countryCode, StringComparison.Ordinal) && result.Length >= countryCode.Length + 9)
+            result = result[countryCode.Length..];
+        else if (result.StartsWith('0'))
+            result = result[1..];
 
-        return digits;
+        return result;
     }
 
     /// <summary>
